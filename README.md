@@ -1,34 +1,124 @@
-# Home Assignment
+# QA Home Assignment
 
-You will be required to write unit tests and automated tests for a payment application to demonstrate your skills. 
+## 📌 Overview
 
-# Application information 
+This repository contains the home assignment for QA position at Riverty. 
+The assignment involves writing unit tests and automated tests for a payment application that validates credit card data.
 
-It’s an small microservice that validates provided Credit Card data and returns either an error or type of credit card application. 
+## 🧩 Functional Scope
 
-# API Requirements 
+The functinal scope of the assignment includes:
+- Validating credit card data including card owner, credit card number, issue date, and CVC.
+- Returning the type of credit card application (Master Card, Visa, or American Express) upon successful validation.
+- Returning validation errors in case of failure.
+- Writing unit tests that cover at least 80% of the application.
+- Writing integration tests using the Reqnroll framework.
+- (Optional) Creating a Docker pipeline to run unit and integration tests and produce test execution results.
 
-API that validates credit card data. 
+## 🧪 Test Groups
 
-Input parameters: Card owner, Credit Card number, issue date and CVC. 
+The tests are organized into the following groups:
+- Unit tests
+- Integration tests
 
-Logic should verify that all fields are provided, card owner does not have credit card information, credit card is not expired, number is valid for specified credit card type, CVC is valid for specified credit card type. 
+## 📊 Test & Coverage Reports (CI)
 
-API should return credit card type in case of success: Master Card, Visa or American Express. 
+After a pipeline run:
 
-API should return all validation errors in case of failure. 
+1. Open **GitHub → Actions**
+2. Select a workflow run
+3. Download artifact:
+   - `test-and-coverage-html`
+4. Open `index.html` locally in a browser
+
+The report contains:
+- Test execution summary
+- Passed / failed test details
+- Code coverage overview
+
+## 🐳 Running Tests with Docker
+
+### Requirements:
+
+- - Docker installed and running on your machine.
+
+### Prerequisites
+
+1. 1. Please install following:
+
+- [Docker](https://www.docker.com/)
+
+2. Check Docker:
+```bash
+docker --version
+docker info
+```
+3. Run Docker
 
 
-# Technical Requirements 
+### Build Docker Image
 
- - Write unit tests that covers 80% of application 
- - Write integration tests (preferably using Reqnroll framework) 
- - As a bonus: 
-    - Create a pipeline where unit tests and integration tests are running with help of Docker. 
-    - Produce tests execution results. 
+Run from the repository root:
+```bash
+docker build -t qa-home-assignment
+```
 
-# Running the  application 
+### Run Tests in Docker Container
 
-1. Fork the repository
-2. Clone the repository on your local machine 
-3. Compile and Run application Visual Studio 2022.
+Run tests inside Docker
+
+```bash
+docker run --rm qa-home-assignment
+```
+
+### View reports from Docker to your host machine
+
+If your Dockerfile/script generates TestResults/ and reports/ inside the container, you can mount a local folder:
+
+#### Linux / macOS (bash/zsh)
+
+From the repository root:
+```bash
+mkdir -p artifacts
+docker run --rm \
+  -v "$(pwd)/artifacts:/artifacts" \
+  qa-home-assignment
+```
+
+Then ensure your container copies results to /artifacts (common pattern):
+
+/artifacts/TestResults
+/artifacts/reports
+
+After the run you will find on your host:
+
+./artifacts/TestResults/
+./artifacts/reports/
+
+##### Alternative (macOS zsh) – explicit path
+
+```zsh
+mkdir -p artifacts
+docker run --rm \
+  -v "$PWD/artifacts:/artifacts" \
+  qa-home-assignment
+  ```
+
+#### PowerShell (Windows):
+
+```powershell
+mkdir artifacts -Force | Out-Null
+docker run --rm `
+  -v "${PWD}\artifacts:/artifacts" `
+  qa-home-assignment
+```
+
+Then ensure your container copies results to /artifacts (common pattern):
+
+/artifacts/TestResults
+/artifacts/reports
+
+If you already generate results directly into /artifacts inside the container, after the run you will find:
+
+.\artifacts\TestResults\
+.\artifacts\reports\
