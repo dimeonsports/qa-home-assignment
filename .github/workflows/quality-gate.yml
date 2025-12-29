@@ -1,0 +1,86 @@
+name: Build, Test & Coverage
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Run tests with coverage (produce TRX + cobertura)
+        run: |
+          dotnet test -c Release \
+            --collect:"XPlat Code Coverage" \
+            --logger "trx" \
+            --results-directory TestResults
+
+      # ВАЖНО: сохраняем результаты тестов, чтобы следующий job мог из них строить HTML
+      - name: Upload raw test results (TRX + coverage xml)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+
+  coverage_report:
+    name: Coverage & HTML report
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: Download test results artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+
+      - name: Generate HTML reports from TRX + Cobertura
+        run: |
+          dotnet tool run reportgenerator \
+            "-reports:TestResults/**/coverage.cobertura.xml;TestResults/**/*.trx" \
+            "-targetdir:reports" \
+            "-reporttypes:Html;HtmlSummary"
+
+      - name: Upload HTML reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-and-coverage-html
+          path: reports

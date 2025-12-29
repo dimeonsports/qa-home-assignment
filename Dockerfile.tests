@@ -1,0 +1,9 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+
+WORKDIR /app
+
+COPY . .
+
+RUN dotnet restore
+
+CMD ["sh", "-c", "dotnet test CardValidation.Tests/CardValidation.UnitTests/CardValidation.UnitTests.csproj --configuration Release --logger \"trx;LogFileName=unit-tests.trx\" --results-directory /app/TestResults && dotnet test CardValidation.Tests/CardValidation.IntegrationTests/CardValidation.IntegrationTests.csproj --configuration Release --logger \"trx;LogFileName=integration-tests.trx\" --results-directory /app/TestResults"]
