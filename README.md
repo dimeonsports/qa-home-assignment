@@ -40,13 +40,13 @@ The report contains:
 
 ### Requirements:
 
-- - Docker installed and running on your machine.
+Docker installed and running on your machine.
 
 ### Prerequisites
 
-1. 1. Please install following:
+1. Please install following:
 
-- [Docker](https://www.docker.com/)
+[Docker](https://www.docker.com/)
 
 2. Check Docker:
 ```bash
@@ -87,13 +87,13 @@ docker run --rm \
 
 Then ensure your container copies results to /artifacts (common pattern):
 
-/artifacts/TestResults
-/artifacts/reports
+*/artifacts/TestResults*
+*/artifacts/reports**
 
 After the run you will find on your host:
 
-./artifacts/TestResults/
-./artifacts/reports/
+*./artifacts/TestResults/*
+*./artifacts/reports/*
 
 ##### Alternative (macOS zsh) – explicit path
 
@@ -115,10 +115,10 @@ docker run --rm `
 
 Then ensure your container copies results to /artifacts (common pattern):
 
-/artifacts/TestResults
-/artifacts/reports
+*/artifacts/TestResults*
+*/artifacts/reports*
 
 If you already generate results directly into /artifacts inside the container, after the run you will find:
 
-.\artifacts\TestResults\
-.\artifacts\reports\
+*.\artifacts\TestResults\*
+*.\artifacts\reports\*
